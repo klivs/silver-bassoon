@@ -16,12 +16,12 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh "mvn clean install"
+                sh "mvn clean install -DskipTests -Denv=prod"
             }
         }
         stage("Test") {
             steps {
-                sh "mvn clean test"
+                sh "mvn clean test -Denv=prod"
             }
             post {
                 always {
