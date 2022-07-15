@@ -21,4 +21,9 @@ public class MainRestController {
 
         return this.personRepository.findAll();
     }
+
+    @GetMapping(value = "/test")
+    public void test() {
+    }
+
 }
