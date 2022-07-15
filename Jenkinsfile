@@ -16,12 +16,12 @@ pipeline {
         }
         stage("Build") {
             steps {
-                sh "mvn clean install -DskipTests -Denv=prod"
+                sh "mvn clean install -DskipTests -Dspring.profiles.active=prod"
             }
         }
         stage("Test") {
             steps {
-                sh "mvn clean test -Denv=prod"
+                sh "mvn clean test -Dspring.profiles.active=prod"
             }
             post {
                 always {
@@ -33,7 +33,7 @@ pipeline {
         stage("SonarQube") {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh "mvn dependency-check:aggregate sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml"
+                    sh "mvn dependency-check:aggregate sonar:sonar -Dspring.profiles.active=prod -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml"
                 }
             }
         }
