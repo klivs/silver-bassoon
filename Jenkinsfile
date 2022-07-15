@@ -5,24 +5,41 @@ pipeline {
         skipStagesAfterUnstable()
     }
     stages {
+        stage('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}
+                    echo "M2_HOME = ${M2_HOME}"
+                   '''
+                sh "mvn -version"
+            }
+        }
         stage("Build") {
             steps {
-                parallel(
-                        "step 1 ": { echo "Building..." },
-                        "step 2 ": { echo "hello" },
-                        "step 3 ": { echo "world" },
-                        "step 4 ": { echo "!!!!!" }
-                )
+                sh "mvn clean install"
             }
         }
         stage("Test") {
             steps {
-                echo "Testing..."
+                sh "mvn clean test"
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    jacoco(execPattern: '**/*.exed')
+                }
+            }
+        }
+        stage("SonarQube") {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh "mvn dependency-check:aggregate sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.dependencyCheck.reportPath=target/dependency-check-report.xml"
+                }
             }
         }
         stage("Deploy") {
             steps {
-                echo "Deploying"
+                sh "echo 'TODO'"
             }
         }
 
