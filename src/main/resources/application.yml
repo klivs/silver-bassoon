@@ -1,0 +1,9 @@
+server:
+  port: 8090
+spring:
+  flyway:
+    enabled: false
+  security:
+    user:
+      name: user
+      password: user
