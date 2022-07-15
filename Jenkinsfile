@@ -1,6 +1,6 @@
 // noinspection GroovyAssignabilityCheck
 pipeline {
-    agent any()
+    agent any
     options {
         skipStagesAfterUnstable()
     }
